@@ -1,0 +1,5 @@
+.env
+__pycache__
+choma_db
+.venv
+.DS_Store

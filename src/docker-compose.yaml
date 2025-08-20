@@ -1,0 +1,21 @@
+name: gani-test
+services:
+  app:
+    build: .
+    ports:
+      - 8501:8501
+    env_file: .env
+    environment:
+      CHROMA_HOST: chroma
+      CHROMA_PORT: 8000
+
+  chromadb:
+    hostname: chroma
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma-data:/data/chromadb
+
+volumes:
+  chroma-data:
