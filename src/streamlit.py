@@ -319,30 +319,30 @@ def create_conversational_chain(
                     return [0.0] * self.embedding_dim
 
         # Create embeddings based on what's available
-        if use_fastembed:
-            embeddings = ProgressEmbeddings(embedding_model, embedding_progress)
-            logger.info("Using custom ProgressEmbeddings with FastEmbed model")
-            st.session_state.embedding_model_ready = True
-        else:
-            # Fall back to Google's embeddings if FastEmbed isn't available
-            try:
-                st.write("🔄 Initializing Google Generative AI Embeddings...")
-                logger.info("Attempting to initialize GoogleGenerativeAIEmbeddings")
-                embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-                # Test the embedding model
-                test_result = embeddings.embed_query("Test embedding")
-                if test_result:
-                    logger.info(f"Google embeddings test successful, dimension: {len(test_result)}")
-                    st.write("✅ Using Google Generative AI Embeddings")
-                    st.session_state.embedding_model_ready = True
-                else:
-                    raise ValueError("Google embeddings test returned empty result")
-            except Exception as e:
-                logger.error(f"Error initializing Google Embeddings: {str(e)}")
-                st.error(f"❌ Error initializing Google Embeddings: {str(e)}")
-                st.error("Cannot continue without embeddings. Please check your API keys and try again.")
-                st.session_state.embedding_model_ready = False
-                return None
+        # if use_fastembed:
+        embeddings = ProgressEmbeddings(embedding_model, embedding_progress)
+        logger.info("Using custom ProgressEmbeddings with FastEmbed model")
+        st.session_state.embedding_model_ready = True
+        # else:
+        #     # Fall back to Google's embeddings if FastEmbed isn't available
+        #     try:
+        #         st.write("🔄 Initializing Google Generative AI Embeddings...")
+        #         logger.info("Attempting to initialize GoogleGenerativeAIEmbeddings")
+        #         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        #         # Test the embedding model
+        #         test_result = embeddings.embed_query("Test embedding")
+        #         if test_result:
+        #             logger.info(f"Google embeddings test successful, dimension: {len(test_result)}")
+        #             st.write("✅ Using Google Generative AI Embeddings")
+        #             st.session_state.embedding_model_ready = True
+        #         else:
+        #             raise ValueError("Google embeddings test returned empty result")
+        #     except Exception as e:
+        #         logger.error(f"Error initializing Google Embeddings: {str(e)}")
+        #         st.error(f"❌ Error initializing Google Embeddings: {str(e)}")
+        #         st.error("Cannot continue without embeddings. Please check your API keys and try again.")
+        #         st.session_state.embedding_model_ready = False
+        #         return None
 
         # Connect to persistent ChromaDB
         status.update(label="Connecting to ChromaDB...", state="running")
@@ -466,30 +466,13 @@ def create_conversational_chain(
             logger.info("Set GOOGLE_API_KEY in environment variables")
 
             # Create a simple LLM instance with minimal parameters
-            # Ensure we're using the correct model name and parameters
-            try:
-                logger.info("Initializing GoogleGenerativeAI with gemini-pro model")
-                llm = GoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
-                # Test the LLM with a simple query to verify it works
-                test_result = llm.invoke("Test")
-                logger.info(f"Successfully created and tested GoogleGenerativeAI LLM, result type: {type(test_result)}")
-                st.success("✅ Successfully created Google Generative AI model")
-                st.session_state.api_key_valid = True
-            except Exception as test_e:
-                # If the default model fails, try with an alternative model
-                logger.warning(f"Initial model test failed: {str(test_e)}, trying alternative model")
-                try:
-                    logger.info("Attempting to use alternative model gemini-1.0-pro")
-                    llm = GoogleGenerativeAI(model="gemini-1.0-pro", temperature=0.1)
-                    test_result = llm.invoke("Test")
-                    logger.info("Successfully created and tested alternative GoogleGenerativeAI LLM")
-                    st.success("✅ Successfully created Google Generative AI model (alternative)")
-                    st.session_state.api_key_valid = True
-                except Exception as alt_e:
-                    logger.error(f"Alternative model also failed: {str(alt_e)}")
-                    st.error("All model attempts failed. Please check your API key and network connection.")
-                    st.session_state.api_key_valid = False
-                    raise
+            logger.info("Initializing GoogleGenerativeAI with gemini-pro model")
+            llm = GoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.1)
+            # Test the LLM with a simple query to verify it works
+            test_result = llm.invoke("Test")
+            logger.info(f"Successfully created and tested GoogleGenerativeAI LLM, result type: {type(test_result)}")
+            st.success("✅ Successfully created Google Generative AI model")
+            st.session_state.api_key_valid = True
 
         except Exception as e:
             error_msg = f"Error initializing LLM: {str(e)}"

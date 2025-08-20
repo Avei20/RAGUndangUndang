@@ -3,3 +3,4 @@ __pycache__
 choma_db
 .venv
 .DS_Store
+index_metadata.json
