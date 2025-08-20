@@ -16,11 +16,23 @@ from langchain_core.documents import Document
 import hashlib
 import json
 import importlib
+import openlit
+
 from datetime import datetime
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
+
+# Initialize OpenLit
+otlp_endpoint = os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT", "")
+if otlp_endpoint != "" :
+    openlit.init(
+        otlp_endpoint=otlp_endpoint,
+        application_name="rag_undang_undang",
+        disable_batch=True,
+        environment="production"
+    )
 
 # Configure logging
 # Configure logging with both file and console handlers

@@ -1,4 +1,8 @@
 name: gani-test
+# Uncomment this to enable the instrumentation (Program might not working)
+# include:
+#   - ../instrumentation/docker-compose.yaml
+
 services:
   app:
     build: .
@@ -8,6 +12,7 @@ services:
     environment:
       CHROMA_HOST: chroma
       CHROMA_PORT: 8000
+      # OTLP_ENDPOINT: http://otel-collector:4317
 
   chromadb:
     hostname: chroma
