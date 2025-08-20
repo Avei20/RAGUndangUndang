@@ -12,7 +12,7 @@ services:
     environment:
       CHROMA_HOST: chroma
       CHROMA_PORT: 8000
-      # OTLP_ENDPOINT: http://otel-collector:4317
+      # OTLP_ENDPOINT: http://otel-collector:4318
 
   chromadb:
     hostname: chroma
